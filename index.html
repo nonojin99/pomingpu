@@ -4,366 +4,26 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <meta name="theme-color" content="#ec4899" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
   <title>내친구 포밍뿌</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --pink: #ec4899;
-      --pink-light: #fce7f3;
-      --green: #22c55e;
-      --orange: #f97316;
-      --teal: #14b8a6;
-      --bg: #fdf2f8;
-    }
-    
-    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    
-    body {
-      font-family: 'Nunito', -apple-system, sans-serif;
-      background: linear-gradient(160deg, #fdf2f8 0%, #f0f9ff 40%, #f0fdf4 100%);
-      min-height: 100vh;
-      min-height: 100dvh;
-      color: #334155;
-      overflow-x: hidden;
-      user-select: none;
-    }
-    
-    .screen {
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-      min-height: 100dvh;
-      padding: 12px 16px 24px;
-      max-width: 430px;
-      margin: 0 auto;
-      position: relative;
-    }
-    .screen.active { display: flex; }
-    
-    /* ===== SELECT SCREEN ===== */
-    #select-screen h1 {
-      font-size: 1.9rem;
-      font-weight: 800;
-      background: linear-gradient(135deg, #ec4899, #f472b6);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin: 28px 0 6px;
-      letter-spacing: -0.5px;
-    }
-    .subtitle { color: #94a3b8; font-size: 0.95rem; margin-bottom: 28px; }
-    
-    .char-grid { width: 100%; display: flex; flex-direction: column; gap: 14px; }
-    
-    .char-card {
-      background: white;
-      border-radius: 22px;
-      padding: 16px 18px;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.05);
-      border: 3px solid transparent;
-      cursor: pointer;
-      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-    .char-card:active { transform: scale(0.97); }
-    .char-card.selected {
-      border-color: var(--pink);
-      box-shadow: 0 10px 28px rgba(236,72,153,0.18);
-      transform: translateY(-3px);
-    }
-    
-    .char-card img {
-      width: 82px; height: 82px;
-      object-fit: contain;
-      border-radius: 18px;
-      background: #fafafa;
-    }
-    
-    .char-info h3 { font-size: 1.25rem; font-weight: 800; margin-bottom: 2px; }
-    .char-info p { font-size: 0.85rem; color: #64748b; line-height: 1.3; }
-    .tag {
-      display: inline-block; margin-top: 6px;
-      padding: 2px 10px; border-radius: 999px;
-      font-size: 0.72rem; font-weight: 700;
-    }
-    .porongi .tag { background: #dcfce7; color: #16a34a; }
-    .mingttu .tag { background: #ffedd5; color: #c2410c; }
-    .pubi .tag { background: #ccfbf1; color: #0f766e; }
-    
-    .start-btn {
-      margin-top: 28px; width: 100%; padding: 16px;
-      background: linear-gradient(135deg, #ec4899, #f472b6);
-      color: white; border: none; border-radius: 18px;
-      font-size: 1.15rem; font-weight: 800;
-      box-shadow: 0 8px 24px rgba(236,72,153,0.35);
-      opacity: 0.4; pointer-events: none;
-      transition: all 0.25s;
-    }
-    .start-btn.enabled { opacity: 1; pointer-events: auto; }
-    .start-btn:active { transform: scale(0.97); }
-    
-    /* ===== HOME SCREEN ===== */
-    .top-bar {
-      width: 100%; display: flex; justify-content: space-between;
-      align-items: center; margin-bottom: 12px;
-    }
-    .day-badge {
-      background: white; padding: 6px 14px; border-radius: 999px;
-      font-weight: 800; font-size: 0.9rem; color: #64748b;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-    }
-    .coin-box {
-      background: linear-gradient(135deg, #fef3c7, #fde68a);
-      padding: 6px 14px; border-radius: 999px;
-      font-weight: 800; color: #b45309;
-      display: flex; align-items: center; gap: 5px;
-      box-shadow: 0 2px 8px rgba(245,158,11,0.2);
-    }
-    
-    .stats-card {
-      width: 100%; background: white; border-radius: 20px;
-      padding: 14px 16px; margin-bottom: 14px;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.04);
-    }
-    .stat-row {
-      display: flex; align-items: center; gap: 10px; margin-bottom: 10px;
-    }
-    .stat-row:last-child { margin-bottom: 0; }
-    .stat-icon { font-size: 1.1rem; width: 24px; text-align: center; }
-    .stat-label { width: 36px; font-size: 0.8rem; font-weight: 700; color: #64748b; }
-    .stat-bar {
-      flex: 1; height: 12px; background: #f1f5f9;
-      border-radius: 999px; overflow: hidden;
-    }
-    .stat-fill {
-      height: 100%; border-radius: 999px;
-      transition: width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-    .happy .stat-fill { background: linear-gradient(90deg, #f9a8d4, #ec4899); }
-    .health .stat-fill { background: linear-gradient(90deg, #86efac, #22c55e); }
-    .stat-val { font-size: 0.8rem; font-weight: 700; width: 36px; text-align: right; }
-    
-    /* ROOM */
-    .room {
-      width: 100%; height: 280px; border-radius: 28px;
-      position: relative; overflow: hidden; margin-bottom: 14px;
-      background: linear-gradient(180deg, #fef9c3 0%, #fde047 60%, #facc15 100%);
-      box-shadow: 0 8px 24px rgba(250,204,21,0.25);
-    }
-    .room-wall {
-      position: absolute; top: 0; left: 0; right: 0; height: 55%;
-      background: linear-gradient(180deg, #fef3c7, #fde68a);
-    }
-    .room-floor {
-      position: absolute; bottom: 0; left: 0; right: 0; height: 45%;
-      background: linear-gradient(180deg, #fbbf24, #f59e0b);
-      border-radius: 0 0 28px 28px;
-    }
-    .window {
-      position: absolute; top: 18px; right: 22px;
-      width: 70px; height: 55px; background: #bae6fd;
-      border-radius: 12px; border: 4px solid #fef3c7;
-      box-shadow: inset 0 0 20px rgba(255,255,255,0.5);
-    }
-    .window::after {
-      content: '☁️'; position: absolute; top: 8px; left: 10px; font-size: 0.9rem;
-    }
-    
-    .pet-name-tag {
-      position: absolute; top: 14px; left: 50%; transform: translateX(-50%);
-      background: white; padding: 5px 16px; border-radius: 999px;
-      font-weight: 800; font-size: 0.9rem;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      z-index: 5;
-    }
-    
-    .pet {
-      position: absolute; bottom: 35px; left: 50%;
-      width: 150px; height: 150px;
-      object-fit: contain;
-      filter: drop-shadow(0 10px 15px rgba(0,0,0,0.18));
-      cursor: pointer; z-index: 4;
-      transition: transform 0.15s;
-      animation: idleFloat 2.8s ease-in-out infinite;
-      transform-origin: center bottom;
-      will-change: transform;
-      backface-visibility: hidden;
-    }
-    .pet.bounce { animation: bouncePet 0.55s ease; }
-    @keyframes idleFloat {
-      0%, 100% {
-        transform: translate3d(-50%, 0, 0) scale(1, 1);
-      }
-      50% {
-        transform: translate3d(-50%, -6px, 0) scale(1.03, 0.97);
-      }
-    }
-    @keyframes bouncePet {
-      0%, 100% { transform: translate3d(-50%, 0, 0) scale(1); }
-      30% { transform: translate3d(-50%, -28px, 0) scale(1.05); }
-      50% { transform: translate3d(-50%, -10px, 0) scale(0.98); }
-      70% { transform: translate3d(-50%, -18px, 0) scale(1.02); }
-    }
-    
-    .speech {
-      position: absolute; bottom: 175px; left: 50%;
-      transform: translateX(-50%);
-      background: white; padding: 8px 14px; border-radius: 16px;
-      font-size: 0.85rem; font-weight: 700; color: #475569;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      opacity: 0; transition: all 0.3s; pointer-events: none;
-      white-space: nowrap; z-index: 10;
-    }
-    .speech.show { opacity: 1; bottom: 185px; }
-    .speech::after {
-      content: ''; position: absolute; bottom: -6px; left: 50%;
-      transform: translateX(-50%);
-      border: 6px solid transparent; border-top-color: white;
-    }
-    
-    /* ACTIONS */
-    .actions {
-      width: 100%; display: grid;
-      grid-template-columns: repeat(4, 1fr); gap: 8px;
-      margin-bottom: 12px;
-    }
-    .action-btn {
-      background: white; border: none; border-radius: 16px;
-      padding: 12px 4px; display: flex; flex-direction: column;
-      align-items: center; gap: 4px;
-      font-size: 0.72rem; font-weight: 700; color: #475569;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.05);
-      cursor: pointer; transition: all 0.15s;
-    }
-    .action-btn:active { transform: scale(0.92); }
-    .action-btn.done { opacity: 0.45; background: #f8fafc; }
-    .action-btn .emoji { font-size: 1.45rem; }
-    
-    .bottom-row {
-      width: 100%; display: flex; gap: 8px;
-    }
-    .bottom-btn {
-      flex: 1; background: white; border: none; border-radius: 16px;
-      padding: 13px; font-weight: 800; font-size: 0.9rem;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.05);
-      cursor: pointer; display: flex; align-items: center;
-      justify-content: center; gap: 6px;
-    }
-    .bottom-btn:active { transform: scale(0.96); }
-    .shop-btn { color: #b45309; }
-    .game-btn { color: #7c3aed; }
-    .next-btn {
-      background: linear-gradient(135deg, #6366f1, #8b5cf6);
-      color: white; box-shadow: 0 4px 14px rgba(99,102,241,0.3);
-    }
-    
-    .growth-bar {
-      width: 100%; text-align: center; margin-top: 10px;
-      font-size: 0.8rem; color: #64748b; font-weight: 600;
-    }
-    
-    /* TOAST */
-    .toast {
-      position: fixed; bottom: 40px; left: 50%;
-      transform: translateX(-50%) translateY(80px);
-      background: #1e293b; color: white;
-      padding: 12px 22px; border-radius: 999px;
-      font-weight: 700; font-size: 0.9rem;
-      opacity: 0; transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-      z-index: 200; white-space: nowrap;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-    }
-    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
-    
-    /* ===== MINI GAME ===== */
-    #game-screen { background: #0f172a; }
-    .game-header {
-      width: 100%; display: flex; justify-content: space-between;
-      align-items: center; color: white; margin-bottom: 12px;
-    }
-    .game-header button {
-      background: #334155; border: none; color: white;
-      padding: 8px 14px; border-radius: 12px; font-weight: 700;
-    }
-    .game-score { font-size: 1.3rem; font-weight: 800; color: #fbbf24; }
-    
-    .game-area {
-      width: 100%; height: 420px; background: linear-gradient(180deg, #1e3a5f, #0f172a);
-      border-radius: 24px; position: relative; overflow: hidden;
-      border: 3px solid #334155;
-    }
-    .fly {
-      position: absolute; font-size: 2rem;
-      cursor: pointer; transition: transform 0.1s;
-      user-select: none;
-    }
-    .fly:active { transform: scale(1.3); }
-    .game-over-msg {
-      position: absolute; inset: 0; display: none;
-      flex-direction: column; align-items: center; justify-content: center;
-      background: rgba(15,23,42,0.85); color: white; z-index: 20;
-    }
-    .game-over-msg.show { display: flex; }
-    .game-over-msg h2 { font-size: 1.8rem; margin-bottom: 8px; }
-    .game-over-msg p { margin-bottom: 20px; color: #94a3b8; }
-    .game-over-msg button {
-      background: var(--pink); border: none; color: white;
-      padding: 12px 28px; border-radius: 14px; font-weight: 800; font-size: 1rem;
-    }
-    
-    /* ===== SHOP ===== */
-    #shop-screen { background: #fff7ed; }
-    .shop-header {
-      width: 100%; display: flex; justify-content: space-between;
-      align-items: center; margin-bottom: 16px;
-    }
-    .shop-header h2 { font-size: 1.4rem; font-weight: 800; color: #c2410c; }
-    .shop-header button {
-      background: white; border: none; padding: 8px 14px;
-      border-radius: 12px; font-weight: 700; color: #64748b;
-    }
-    .shop-items {
-      width: 100%; display: flex; flex-direction: column; gap: 10px;
-    }
-    .shop-item {
-      background: white; border-radius: 18px; padding: 14px 16px;
-      display: flex; align-items: center; gap: 14px;
-      box-shadow: 0 3px 12px rgba(0,0,0,0.04);
-    }
-    .shop-item .icon { font-size: 2rem; }
-    .shop-item .info { flex: 1; }
-    .shop-item .info h4 { font-weight: 800; font-size: 1rem; }
-    .shop-item .info p { font-size: 0.8rem; color: #64748b; }
-    .shop-item .price {
-      background: #fef3c7; color: #b45309; padding: 6px 12px;
-      border-radius: 999px; font-weight: 800; font-size: 0.85rem;
-      border: none; cursor: pointer;
-    }
-    .shop-item .price:disabled { opacity: 0.4; }
-    
-    /* LOADING / RESET */
-    .reset-area {
-      margin-top: 20px; text-align: center;
-    }
-    .reset-btn {
-      background: none; border: none; color: #94a3b8;
-      font-size: 0.8rem; text-decoration: underline; cursor: pointer;
-    }
-  </style>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="assets/icons/icon-192.png" />
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="포밍뿌" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
 
   <!-- SELECT -->
-  <div id="select-screen" class="screen active">
+  <div id="select-screen" class="screen">
     <h1>내친구 포밍뿌</h1>
     <p class="subtitle">키울 친구를 골라주세요 ♥</p>
     <div class="char-grid">
       <div class="char-card porongi" data-char="porongi">
-        <img src="public/characters/porongi.png" alt="포롱이">
+        <img src="assets/characters/porongi.png" alt="포롱이" />
         <div class="char-info">
           <h3>포롱이</h3>
           <p>꽃나라에서 온 상냥한 친구</p>
@@ -371,7 +31,7 @@
         </div>
       </div>
       <div class="char-card mingttu" data-char="mingttu">
-        <img src="public/characters/mingttu.png" alt="밍뚜">
+        <img src="assets/characters/mingttu.png" alt="밍뚜" />
         <div class="char-info">
           <h3>밍뚜</h3>
           <p>젤리나라의 개구쟁이</p>
@@ -379,7 +39,7 @@
         </div>
       </div>
       <div class="char-card pubi" data-char="pubi">
-        <img src="public/characters/pubi.png" alt="뿌비">
+        <img src="assets/characters/pubi.png" alt="뿌비" />
         <div class="char-info">
           <h3>뿌비</h3>
           <p>거북나라의 귀여운 막내</p>
@@ -396,22 +56,28 @@
   <!-- HOME -->
   <div id="home-screen" class="screen">
     <div class="top-bar">
-      <div class="day-badge">Day <span id="day">1</span></div>
+      <div class="care-badge">💖 케어 <span id="care-points">0</span></div>
       <div class="coin-box">🪙 <span id="coins">50</span></div>
     </div>
 
     <div class="stats-card">
-      <div class="stat-row happy">
-        <span class="stat-icon">💗</span>
-        <span class="stat-label">행복</span>
-        <div class="stat-bar"><div class="stat-fill" id="happy-bar" style="width:50%"></div></div>
-        <span class="stat-val" id="happy-val">5</span>
+      <div class="stat-row hunger">
+        <span class="stat-icon">🍚</span>
+        <span class="stat-label">포만감</span>
+        <div class="stat-bar"><div class="stat-fill" id="hunger-bar" style="width:80%"></div></div>
+        <span class="stat-val" id="hunger-val">80</span>
       </div>
-      <div class="stat-row health">
-        <span class="stat-icon">💚</span>
-        <span class="stat-label">건강</span>
-        <div class="stat-bar"><div class="stat-fill" id="health-bar" style="width:50%"></div></div>
-        <span class="stat-val" id="health-val">5</span>
+      <div class="stat-row clean">
+        <span class="stat-icon">🫧</span>
+        <span class="stat-label">청결</span>
+        <div class="stat-bar"><div class="stat-fill" id="clean-bar" style="width:80%"></div></div>
+        <span class="stat-val" id="clean-val">80</span>
+      </div>
+      <div class="stat-row love">
+        <span class="stat-icon">💗</span>
+        <span class="stat-label">애정</span>
+        <div class="stat-bar"><div class="stat-fill" id="love-bar" style="width:80%"></div></div>
+        <span class="stat-val" id="love-val">80</span>
       </div>
     </div>
 
@@ -421,422 +87,24 @@
       <div class="window"></div>
       <div class="pet-name-tag" id="pet-name">포롱이</div>
       <div class="speech" id="speech"></div>
-      <img class="pet" id="pet-img" src="public/characters/porongi.png" alt="pet">
+      <img class="pet" id="pet-img" src="assets/characters/porongi.png" alt="pet" />
     </div>
 
     <div class="actions">
-      <button class="action-btn" data-action="feed"><span class="emoji">🍚</span>밥주기</button>
-      <button class="action-btn" data-action="bath"><span class="emoji">🛁</span>목욕</button>
-      <button class="action-btn" data-action="clean"><span class="emoji">🧹</span>청소</button>
-      <button class="action-btn" data-action="play"><span class="emoji">🎾</span>놀아주기</button>
-      <button class="action-btn" data-action="sleep"><span class="emoji">😴</span>재우기</button>
-      <button class="action-btn" data-action="hug"><span class="emoji">🤗</span>안아주기</button>
-      <button class="action-btn" data-action="brush"><span class="emoji">🪥</span>양치</button>
-      <button class="action-btn" data-action="tickle"><span class="emoji">🤭</span>간질간질</button>
+      <button class="action-btn" data-action="feed"><span class="emoji">🍚</span>밥주기<span class="sub"></span></button>
+      <button class="action-btn" data-action="snack"><span class="emoji">🍭</span>간식<span class="sub"></span></button>
+      <button class="action-btn" data-action="bath"><span class="emoji">🛁</span>목욕<span class="sub"></span></button>
+      <button class="action-btn" data-action="brush"><span class="emoji">🪥</span>양치<span class="sub"></span></button>
+      <button class="action-btn" data-action="play"><span class="emoji">🎾</span>놀아주기<span class="sub"></span></button>
+      <button class="action-btn" data-action="pet"><span class="emoji">🤗</span>쓰다듬기<span class="sub"></span></button>
     </div>
 
-    <div class="bottom-row">
-      <button class="bottom-btn shop-btn" id="shop-open">🛒 상점</button>
-      <button class="bottom-btn game-btn" id="game-open">🎮 미니게임</button>
-      <button class="bottom-btn next-btn" id="next-day">🌅 다음날</button>
-    </div>
-
-    <div class="growth-bar">
-      성장아이템 <span id="growth-items">0</span>/3 · <span id="stage">아기</span> 단계
-    </div>
-  </div>
-
-  <!-- MINI GAME -->
-  <div id="game-screen" class="screen">
-    <div class="game-header">
-      <button id="game-back">← 돌아가기</button>
-      <div class="game-score">파리 <span id="fly-score">0</span>마리</div>
-      <div style="width:70px; text-align:right; color:#94a3b8; font-weight:700;" id="timer">30초</div>
-    </div>
-    <div class="game-area" id="game-area">
-      <div class="game-over-msg" id="game-over">
-        <h2>끝!</h2>
-        <p id="final-score">0마리 잡았어요</p>
-        <button id="game-retry">다시 하기</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- SHOP -->
-  <div id="shop-screen" class="screen">
-    <div class="shop-header">
-      <h2>🛒 상점</h2>
-      <button id="shop-back">닫기</button>
-    </div>
-    <div class="shop-items" id="shop-list"></div>
+    <div class="m0-note">M0 뼈대 — 성장·상점·미니게임·소풍은 다음 마일스톤에서</div>
   </div>
 
   <div class="toast" id="toast"></div>
 
-  <script>
-    // ========== STATE ==========
-    const defaultState = () => ({
-      selectedChar: null,
-      name: '',
-      day: 1,
-      coins: 50,
-      happy: 5,
-      health: 5,
-      growthItems: 0,
-      stage: '아기',
-      dailyDone: {},
-      inventory: { food: 3, snack: 1 }
-    });
-
-    let state = defaultState();
-
-    const chars = {
-      porongi: { name: '포롱이', img: 'public/characters/porongi.png', color: '#22c55e' },
-      mingttu: { name: '밍뚜', img: 'public/characters/mingttu.png', color: '#f97316' },
-      pubi: { name: '뿌비', img: 'public/characters/pubi.png', color: '#14b8a6' }
-    };
-
-    const speeches = {
-      porongi: ['포롱~ ♥', '꽃이 좋아!', '고마워~', '히히', '배고파~', '깨끗하다!'],
-      mingttu: ['보잉보잉!', '재미있다!', '또 놀자!', '우와~', '배불러!', '신난다!'],
-      pubi: ['뿌우~', '좋아좋아', '안아줘~', '뿌비야~', '맛있다!', '졸려...']
-    };
-
-    const actions = {
-      feed:   { h: 0, hp: 2, msg: '맛있게 먹었어요! 🍚', need: 'food' },
-      bath:   { h: 1, hp: 2, msg: '깨끗해졌어요! 🛁' },
-      clean:  { h: 1, hp: 1, msg: '집이 반짝반짝! ✨' },
-      play:   { h: 3, hp: 0, msg: '신나게 놀았어요! 🎾' },
-      sleep:  { h: 1, hp: 2, msg: '잘 잤어요~ 😴' },
-      hug:    { h: 2, hp: 0, msg: '포근해요~ 🤗' },
-      brush:  { h: 0, hp: 1, msg: '이가 반짝! 🪥' },
-      tickle: { h: 2, hp: 0, msg: '간지러워~ 🤭' }
-    };
-
-    const shopItems = [
-      { id: 'food', name: '맛있는 밥', desc: '건강 +2', price: 8, icon: '🍚' },
-      { id: 'snack', name: '달콤한 간식', desc: '행복 +2', price: 6, icon: '🍭' },
-      { id: 'toy', name: '장난감', desc: '행복 +3', price: 15, icon: '🧸' },
-      { id: 'medicine', name: '약', desc: '건강 완전회복', price: 20, icon: '💊' },
-      { id: 'furniture', name: '예쁜 가구', desc: '집 꾸미기 (예정)', price: 50, icon: '🛋️' }
-    ];
-
-    // ========== UTILS ==========
-    function toast(msg) {
-      const t = document.getElementById('toast');
-      t.textContent = msg;
-      t.classList.add('show');
-      setTimeout(() => t.classList.remove('show'), 1800);
-    }
-
-    function speak(text) {
-      const s = document.getElementById('speech');
-      s.textContent = text;
-      s.classList.add('show');
-      setTimeout(() => s.classList.remove('show'), 1600);
-    }
-
-    function save() {
-      localStorage.setItem('pomingu_v2', JSON.stringify(state));
-    }
-
-    function load() {
-      try {
-        const raw = localStorage.getItem('pomingu_v2');
-        if (raw) {
-          state = { ...defaultState(), ...JSON.parse(raw) };
-          return !!state.selectedChar;
-        }
-      } catch(e) {}
-      return false;
-    }
-
-    function updateUI() {
-      document.getElementById('day').textContent = state.day;
-      document.getElementById('coins').textContent = state.coins;
-      document.getElementById('happy-bar').style.width = (state.happy * 10) + '%';
-      document.getElementById('health-bar').style.width = (state.health * 10) + '%';
-      document.getElementById('happy-val').textContent = state.happy;
-      document.getElementById('health-val').textContent = state.health;
-      document.getElementById('growth-items').textContent = state.growthItems;
-      document.getElementById('stage').textContent = state.stage;
-      document.getElementById('pet-name').textContent = state.name;
-      if (state.selectedChar) {
-        document.getElementById('pet-img').src = chars[state.selectedChar].img;
-      }
-
-      document.querySelectorAll('.action-btn').forEach(btn => {
-        const act = btn.dataset.action;
-        btn.classList.toggle('done', !!state.dailyDone[act]);
-      });
-
-      // growth check
-      if (state.happy >= 10 && state.health >= 10) {
-        state.happy = 0;
-        state.health = 0;
-        state.growthItems++;
-        toast('성장 아이템 획득! 🌟');
-        checkGrowth();
-        updateUI();
-        save();
-      }
-    }
-
-    function checkGrowth() {
-      if (state.growthItems >= 3) {
-        if (state.stage === '아기') {
-          state.stage = '어린이';
-          state.growthItems = 0;
-          toast(state.name + '가 어린이가 됐어요! 🎉');
-        } else if (state.stage === '어린이') {
-          state.stage = '어른';
-          state.growthItems = 0;
-          toast(state.name + '가 어른이 됐어요! 🏆');
-        }
-      }
-    }
-
-    function bouncePet() {
-      const pet = document.getElementById('pet-img');
-      pet.classList.remove('bounce');
-      void pet.offsetWidth;
-      pet.classList.add('bounce');
-    }
-
-    function randomSpeech() {
-      if (!state.selectedChar) return;
-      const list = speeches[state.selectedChar];
-      speak(list[Math.floor(Math.random() * list.length)]);
-    }
-
-    // ========== SELECT ==========
-    let selected = null;
-    document.querySelectorAll('.char-card').forEach(card => {
-      card.addEventListener('click', () => {
-        document.querySelectorAll('.char-card').forEach(c => c.classList.remove('selected'));
-        card.classList.add('selected');
-        selected = card.dataset.char;
-        document.getElementById('start-btn').classList.add('enabled');
-      });
-    });
-
-    document.getElementById('start-btn').addEventListener('click', () => {
-      if (!selected) return;
-      state = defaultState();
-      state.selectedChar = selected;
-      state.name = chars[selected].name;
-      showScreen('home');
-      updateUI();
-      save();
-      toast(state.name + '와 함께 시작! ♥');
-      setTimeout(() => speak('안녕!'), 400);
-    });
-
-    document.getElementById('reset-btn').addEventListener('click', () => {
-      if (confirm('정말 모든 데이터를 지울까요?')) {
-        localStorage.removeItem('pomingu_v2');
-        state = defaultState();
-        selected = null;
-        document.querySelectorAll('.char-card').forEach(c => c.classList.remove('selected'));
-        document.getElementById('start-btn').classList.remove('enabled');
-        toast('데이터가 초기화됐어요');
-      }
-    });
-
-    // ========== ACTIONS ==========
-    document.querySelectorAll('.action-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const act = btn.dataset.action;
-        if (state.dailyDone[act]) {
-          toast('오늘은 이미 했어요!');
-          return;
-        }
-        const a = actions[act];
-        if (!a) return;
-
-        if (a.need === 'food' && (state.inventory.food || 0) <= 0) {
-          toast('밥이 없어요! 상점에서 사세요');
-          return;
-        }
-
-        state.happy = Math.min(10, state.happy + a.h);
-        state.health = Math.min(10, state.health + a.hp);
-        state.dailyDone[act] = true;
-
-        if (a.need === 'food') state.inventory.food--;
-
-        if (Math.random() > 0.55) {
-          const gain = Math.floor(Math.random() * 4) + 1;
-          state.coins += gain;
-        }
-
-        bouncePet();
-        randomSpeech();
-        toast(a.msg);
-        updateUI();
-        save();
-      });
-    });
-
-    document.getElementById('pet-img').addEventListener('click', () => {
-      bouncePet();
-      randomSpeech();
-    });
-
-    document.getElementById('next-day').addEventListener('click', () => {
-      state.day++;
-      state.dailyDone = {};
-      // slight decay
-      if (state.happy > 1) state.happy = Math.max(1, state.happy - 1);
-      if (state.health > 1) state.health = Math.max(1, state.health - 1);
-      toast('Day ' + state.day + ' 시작! 좋은 하루 보내요');
-      updateUI();
-      save();
-      setTimeout(() => speak('좋은 아침!'), 300);
-    });
-
-    // ========== SCREENS ==========
-    function showScreen(id) {
-      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-      document.getElementById(id + '-screen').classList.add('active');
-    }
-
-    // ========== SHOP ==========
-    document.getElementById('shop-open').addEventListener('click', () => {
-      renderShop();
-      showScreen('shop');
-    });
-    document.getElementById('shop-back').addEventListener('click', () => showScreen('home'));
-
-    function renderShop() {
-      const list = document.getElementById('shop-list');
-      list.innerHTML = shopItems.map(item => `
-        <div class="shop-item">
-          <div class="icon">${item.icon}</div>
-          <div class="info">
-            <h4>${item.name}</h4>
-            <p>${item.desc}</p>
-          </div>
-          <button class="price" data-id="${item.id}" data-price="${item.price}"
-            ${state.coins < item.price ? 'disabled' : ''}>
-            ${item.price}🪙
-          </button>
-        </div>
-      `).join('');
-
-      list.querySelectorAll('.price').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const id = btn.dataset.id;
-          const price = +btn.dataset.price;
-          if (state.coins < price) return;
-          state.coins -= price;
-
-          if (id === 'food') state.inventory.food = (state.inventory.food || 0) + 2;
-          else if (id === 'snack') {
-            state.happy = Math.min(10, state.happy + 2);
-            toast('간식 먹고 행복해졌어요!');
-          } else if (id === 'toy') {
-            state.happy = Math.min(10, state.happy + 3);
-            toast('장난감으로 놀았어요!');
-          } else if (id === 'medicine') {
-            state.health = 10;
-            toast('건강이 회복됐어요!');
-          } else if (id === 'furniture') {
-            toast('가구는 곧 추가될 예정이에요!');
-            state.coins += price; // refund for now
-            return;
-          }
-
-          toast(shopItems.find(i => i.id === id).name + ' 구매 완료!');
-          updateUI();
-          save();
-          renderShop();
-        });
-      });
-    }
-
-    // ========== MINI GAME (파리잡기) ==========
-    let gameActive = false;
-    let flyScore = 0;
-    let flyTimer = null;
-    let spawnTimer = null;
-    let timeLeft = 30;
-
-    document.getElementById('game-open').addEventListener('click', () => {
-      showScreen('game');
-      startGame();
-    });
-    document.getElementById('game-back').addEventListener('click', () => {
-      stopGame();
-      showScreen('home');
-    });
-    document.getElementById('game-retry').addEventListener('click', startGame);
-
-    function startGame() {
-      stopGame();
-      gameActive = true;
-      flyScore = 0;
-      timeLeft = 30;
-      document.getElementById('fly-score').textContent = '0';
-      document.getElementById('timer').textContent = '30초';
-      document.getElementById('game-over').classList.remove('show');
-      document.getElementById('game-area').querySelectorAll('.fly').forEach(f => f.remove());
-
-      flyTimer = setInterval(() => {
-        timeLeft--;
-        document.getElementById('timer').textContent = timeLeft + '초';
-        if (timeLeft <= 0) endGame();
-      }, 1000);
-
-      spawnTimer = setInterval(spawnFly, 700);
-      spawnFly();
-    }
-
-    function stopGame() {
-      gameActive = false;
-      clearInterval(flyTimer);
-      clearInterval(spawnTimer);
-    }
-
-    function spawnFly() {
-      if (!gameActive) return;
-      const area = document.getElementById('game-area');
-      const fly = document.createElement('div');
-      fly.className = 'fly';
-      fly.textContent = '🪰';
-      fly.style.left = (10 + Math.random() * 75) + '%';
-      fly.style.top = (10 + Math.random() * 70) + '%';
-      fly.addEventListener('click', (e) => {
-        e.stopPropagation();
-        if (!gameActive) return;
-        flyScore++;
-        document.getElementById('fly-score').textContent = flyScore;
-        fly.remove();
-        if (navigator.vibrate) navigator.vibrate(15);
-      });
-      area.appendChild(fly);
-
-      setTimeout(() => fly.remove(), 2800);
-    }
-
-    function endGame() {
-      stopGame();
-      document.getElementById('final-score').textContent = flyScore + '마리 잡았어요!';
-      document.getElementById('game-over').classList.add('show');
-
-      const reward = Math.floor(flyScore * 1.5);
-      state.coins += reward;
-      state.happy = Math.min(10, state.happy + Math.min(3, Math.floor(flyScore / 5)));
-      toast('코인 +' + reward + ' 획득!');
-      updateUI();
-      save();
-    }
-
-    // ========== INIT ==========
-    if (load()) {
-      showScreen('home');
-      updateUI();
-    }
-  </script>
+  <script src="js/engine.js"></script>
+  <script src="js/app.js"></script>
 </body>
 </html>

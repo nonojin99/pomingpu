@@ -1,0 +1,8 @@
+{
+  "appId": "com.nonojin.pomingpu",
+  "appName": "포밍뿌",
+  "webDir": ".",
+  "android": {
+    "allowMixedContent": false
+  }
+}
